@@ -34,3 +34,11 @@ chmod 444 /etc/systemd/system/iptables-rules.service
 systemctl daemon-reload
 systemctl enable --now iptables-rules.service
 ```
+
+- generate wireguard configs:
+```
+cd wg
+sh wg-gen.sh
+```
+
+- copy wireguard configs on each host in **/etc/wireguard**, then `systemctl enable wg-quick@<CONFIG NAME>`
