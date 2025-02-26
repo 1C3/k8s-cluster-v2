@@ -10,14 +10,14 @@ chmod 400 /etc/auth/cloudflare_api_token
 
 ```
 cp bin/dns-update /usr/local/bin/
-chmod 500 /usr/local/bin/dns-update
+chmod 544 /usr/local/bin/dns-update
 ```
 
 - setup systemd timer running every minute
 
 ```
 cp systemd/dns-update.* /etc/systemd/system/
-chmod 500 /usr/local/bin/dns-update.*
+chmod 444 /etc/systemd/system/dns-update.*
 
 systemctl daemon-reload
 systemctl enable --now dns-update.timer
@@ -26,10 +26,10 @@ systemctl enable --now dns-update.timer
 - set iptables rules using a systemd service:
 ```
 cp bin/iptables-rules-* /usr/local/bin/
-chmod 500 /usr/local/bin/iptables-rules-*
+chmod 544 /usr/local/bin/iptables-rules-*
 
 cp systemd/iptables-rules.service /etc/systemd/system/
-chmod 500 /usr/local/bin/iptables-rules.service
+chmod 444 /etc/systemd/system/iptables-rules.service
 
 systemctl daemon-reload
 systemctl enable --now iptables-rules.service
