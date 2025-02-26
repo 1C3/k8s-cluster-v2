@@ -16,5 +16,5 @@ ip6tables -D INPUT -p ipv6-icmp --icmpv6-type router-advertisement -j ACCEPT
 ip6tables -D INPUT -p ipv6-icmp --icmpv6-type neighbour-solicitation -j ACCEPT
 ip6tables -D INPUT -p ipv6-icmp --icmpv6-type neighbour-advertisement -j ACCEPT
 ip6tables -D INPUT -p ipv6-icmp --icmpv6-type redirect -j ACCEPT
-ip6tables -D INPUT -j LOG --log-prefix "INPUT:DROPv6 " --log-level 6
+ip6tables -D INPUT -j LOG --log-prefix "INPUT:DROP " --log-level 6
 ip6tables -P INPUT ACCEPT
