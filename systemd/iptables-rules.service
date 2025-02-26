@@ -1,3 +1,7 @@
+[Unit]
+Before=network-pre.target
+Wants=network-pre.target
+
 [Service]
 Type=oneshot
 RemainAfterExit=yes
@@ -5,4 +9,4 @@ ExecStart=/usr/local/bin/iptables-rules-apply
 ExecStop=/usr/local/bin/iptables-rules-delete
 
 [Install]
-WantedBy=network-pre.target
+WantedBy=multi-user.target
