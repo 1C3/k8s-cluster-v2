@@ -1,0 +1,8 @@
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/iptables-rules-apply
+ExecStop=/usr/local/bin/iptables-rules-delete
+
+[Install]
+WantedBy=network-pre.target

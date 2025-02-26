@@ -1,0 +1,6 @@
+[Timer]
+OnCalendar=*-*-* *:*:00
+Unit=dns-update.service
+
+[Install]
+WantedBy=timers.target

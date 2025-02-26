@@ -1,0 +1,23 @@
+#!/bin/sh
+
+iptables -Z INPUT
+iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A INPUT -i hbox+ -j ACCEPT
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+iptables -A INPUT -p icmp --icmp-type 8 -j ACCEPT
+iptables -A INPUT -j LOG --log-prefix "INPUT:DROP " --log-level 6
+iptables -P INPUT DROP
+
+ip6tables -Z INPUT
+ip6tables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+ip6tables -A INPUT -i lo -j ACCEPT
+ip6tables -A INPUT -p tcp --dport 22 -j ACCEPT
+ip6tables -A INPUT -p udp --dport 51820 -j ACCEPT
+ip6tables -A INPUT -p ipv6-icmp --icmpv6-type echo-request -j ACCEPT
+ip6tables -A INPUT -p ipv6-icmp --icmpv6-type router-advertisement -j ACCEPT
+ip6tables -A INPUT -p ipv6-icmp --icmpv6-type neighbour-solicitation -j ACCEPT
+ip6tables -A INPUT -p ipv6-icmp --icmpv6-type neighbour-advertisement -j ACCEPT
+ip6tables -A INPUT -p ipv6-icmp --icmpv6-type redirect -j ACCEPT
+ip6tables -A INPUT -j LOG --log-prefix "INPUT:DROPv6 " --log-level 6
+ip6tables -P INPUT DROP;'
