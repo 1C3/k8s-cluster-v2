@@ -20,4 +20,4 @@ ip6tables -A INPUT -p ipv6-icmp --icmpv6-type neighbour-solicitation -j ACCEPT
 ip6tables -A INPUT -p ipv6-icmp --icmpv6-type neighbour-advertisement -j ACCEPT
 ip6tables -A INPUT -p ipv6-icmp --icmpv6-type redirect -j ACCEPT
 ip6tables -A INPUT -j LOG --log-prefix "INPUT:DROPv6 " --log-level 6
-ip6tables -P INPUT DROP;'
+ip6tables -P INPUT DROP
