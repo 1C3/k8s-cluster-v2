@@ -1,20 +1,24 @@
 #!/bin/sh
 
+iptables -Z INPUT
 iptables -D INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-iptables -D INPUT -i hbox+ -j ACCEPT
-iptables -D INPUT -p tcp --dport 22 -j ACCEPT
-iptables -D INPUT -p icmp --icmp-type 8 -j ACCEPT
-iptables -D INPUT -j LOG --log-prefix "INPUT:DROP " --log-level 6
+iptables -D INPUT -i lo                                      -j ACCEPT
+iptables -D INPUT -i hbox+                                   -j ACCEPT
+iptables -D INPUT -p tcp  --dport 22                         -j ACCEPT
+iptables -D INPUT -p icmp --icmp-type 8                      -j ACCEPT
+iptables -D INPUT --log-prefix "INPUT:DROP " --log-level 6   -j LOG
 iptables -P INPUT ACCEPT
 
-ip6tables -D INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-ip6tables -D INPUT -p tcp --dport 22 -j ACCEPT
-ip6tables -D INPUT -p udp --dport 51820 -j ACCEPT
-ip6tables -D INPUT -p udp --sport 547 --dport 546 -s fe80::/10 -d fe80::/10 -j ACCEPT
-ip6tables -D INPUT -p ipv6-icmp --icmpv6-type echo-request -j ACCEPT
-ip6tables -D INPUT -p ipv6-icmp --icmpv6-type router-advertisement -j ACCEPT
-ip6tables -D INPUT -p ipv6-icmp --icmpv6-type neighbour-solicitation -j ACCEPT
-ip6tables -D INPUT -p ipv6-icmp --icmpv6-type neighbour-advertisement -j ACCEPT
-ip6tables -D INPUT -p ipv6-icmp --icmpv6-type redirect -j ACCEPT
-ip6tables -D INPUT -j LOG --log-prefix "INPUT:DROP " --log-level 6
+ip6tables -Z INPUT
+ip6tables -D INPUT -m conntrack --ctstate ESTABLISHED,RELATED                     -j ACCEPT
+ip6tables -D INPUT -i lo                                                          -j ACCEPT
+ip6tables -D INPUT -p tcp       --dport 22                                        -j ACCEPT
+ip6tables -D INPUT -p udp       --dport 51820                                     -j ACCEPT
+ip6tables -D INPUT -p udp       --sport 547 --dport 546 -s fe80::/10 -d fe80::/10 -j ACCEPT
+ip6tables -D INPUT -p ipv6-icmp --icmpv6-type echo-request                        -j ACCEPT
+ip6tables -D INPUT -p ipv6-icmp --icmpv6-type router-advertisement                -j ACCEPT
+ip6tables -D INPUT -p ipv6-icmp --icmpv6-type neighbour-solicitation              -j ACCEPT
+ip6tables -D INPUT -p ipv6-icmp --icmpv6-type neighbour-advertisement             -j ACCEPT
+ip6tables -D INPUT -p ipv6-icmp --icmpv6-type redirect                            -j ACCEPT
+ip6tables -D INPUT --log-prefix "INPUT:DROP " --log-level 6                       -j LOG
 ip6tables -P INPUT ACCEPT
