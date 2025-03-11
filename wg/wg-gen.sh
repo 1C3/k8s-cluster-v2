@@ -1,31 +1,36 @@
 #!/bin/sh
 
-hosts_file="wg-data.txt"
+hosts='hbox1.ic3.systems 10.90.0.1
+hbox2.ic3.systems 10.90.0.2
+hbox3.ic3.systems 10.90.0.3
+'
+
 tmp_file="tmp.txt"
 
-while read -r line; do
-    hostname=$( echo "$line" | cut -d' ' -f1 )
-    ip=$( echo "$line" | cut -d' ' -f2 )
+printf "%s" "$hosts" | while IFS='' read line;do
+    hostname=$( echo "$line" | cut -d ' ' -f 1 )
+    ip=$( echo "$line" | cut -d ' ' -f 2 )
     privkey=$( wg genkey )
     pubkey=$( echo $privkey | wg pubkey )
     echo "$hostname $ip $privkey $pubkey" >> $tmp_file
-done < $hosts_file
+done
 
-while read -r host; do
-    outfile="$( echo "$host" | cut -d'.' -f1 ).conf"
-    ip=$( echo "$host" | cut -d' ' -f2 )
-    privkey=$( echo "$host" | cut -d' ' -f3 )
+cat $tmp_file | while read host; do
+    outfile="$( echo "$host" | cut -d '.' -f 1 ).conf"
+    ip=$( echo "$host" | cut -d ' ' -f 2 )
+    privkey=$( echo "$host" | cut -d ' ' -f 3 )
 
+    > $outfile
     echo "[Interface]" >> $outfile
     echo "PrivateKey = $privkey" >> $outfile
     echo "Address = $ip" >> $outfile
     echo "ListenPort = 51820" >> $outfile
 
-    while read -r peer_host; do
+    cat $tmp_file | while read peer_host; do
         if [ "$host" != "$peer_host" ]; then
-            hostname=$( echo "$peer_host" | cut -d' ' -f1 )
-            ip=$( echo "$peer_host" | cut -d' ' -f2 )
-            pubkey=$( echo "$peer_host" | cut -d' ' -f4 )
+            hostname=$( echo "$peer_host" | cut -d ' ' -f 1 )
+            ip=$( echo "$peer_host" | cut -d ' ' -f 2 )
+            pubkey=$( echo "$peer_host" | cut -d ' ' -f 4 )
 
             echo "" >> $outfile
             echo "[Peer]" >> $outfile
@@ -33,7 +38,7 @@ while read -r host; do
             echo "PublicKey = $pubkey" >> $outfile
             echo "AllowedIPs = $ip" >> $outfile
         fi
-    done < $tmp_file
-done < $tmp_file
+    done
+done
 
 rm $tmp_file
