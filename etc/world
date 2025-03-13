@@ -1,0 +1,15 @@
+app-admin/eclean-kernel
+app-crypt/sbctl
+app-crypt/tpm2-tools
+app-shells/bash-completion
+dev-vcs/git
+net-analyzer/traceroute
+net-misc/telnet-bsd
+net-vpn/wireguard-tools
+net-wireless/iwd
+sys-boot/efibootmgr
+sys-firmware/intel-microcode
+sys-kernel/gentoo-sources
+sys-kernel/installkernel
+sys-kernel/linux-firmware
+sys-process/htop

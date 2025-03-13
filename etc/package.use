@@ -1,0 +1,3 @@
+sys-apps/systemd cryptsetup boot tpm
+sys-kernel/installkernel dracut uki
+net-firewall/iptables conntrack nftables
