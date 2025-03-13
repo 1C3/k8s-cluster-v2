@@ -25,15 +25,15 @@ mkpart primary 1GiB 100%
 
 - create encrypted container for root partition, format partitions, then mount them
 ```
-cryptsetup luksFormat --cipher aes-xts-plain64 --key-size 512 --hash sha512 --pbkdf argon2id --pbkdf-parallel 4 --iter-time 1000 --verify-passphrase no $ROOT
+cryptsetup luksFormat --cipher aes-xts-plain64 --key-size 512 --hash sha512 --pbkdf argon2id --pbkdf-parallel 4 --iter-time 1000 $ROOT
 cryptsetup luksOpen --allow-discards --perf-no_write_workqueue --perf-no_read_workqueue --persistent $ROOT root
 
 mkfs.vfat -F32 -n ESP $ESP
 mkfs.ext4 -L ROOT -O fast_commit /dev/mapper/root
 
-mkdir /mnt/gentoo
+mkdir -p /mnt/gentoo
 mount /dev/mapper/root /mnt/gentoo
-mkdir /mnt/gentoo/efi
+mkdir -p /mnt/gentoo/efi
 mount $ESP /mnt/gentoo/efi
 ```
 
