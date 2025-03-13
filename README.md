@@ -95,7 +95,7 @@ ESP_ID=$( blkid | grep $ESP | grep -oP '(?<= UUID=")[^"]+' )
 
 cat <<EOF > /etc/dracut.conf
 add_dracutmodules+=" systemd-cryptsetup tpm2-tss "
-kernel_cmdline="root=UUID=$ROOT_ID rd.luks.uuid=$LUKS_ID rd.luks.options=$LUKS_ID=tpm2-device=auto fsck.mode=force fsck.repair=yes"
+kernel_cmdline="root=UUID=$ROOT_ID rd.luks.uuid=$LUKS_ID rd.luks.options=$LUKS_ID=tpm2-device=auto rd.luks.options=tpm2-measure-pcr=yes fsck.mode=force fsck.repair=yes"
 early_microcode="yes"
 compress="zstd"
 EOF
@@ -152,7 +152,7 @@ systemctl enable --now systemd-timesyncd
 ```
 ROOT='/dev/sda2'
 TPM='/dev/tpmrm0' # systemd-cryptenroll --tpm2-device=list
-systemd-cryptenroll --tpm2-device=$TPM --tpm2-pcrs=0+1+2+7 $ROOT
+systemd-cryptenroll --wipe-slot=tpm2 --tpm2-device=$TPM --tpm2-pcrs=0+1+2+7+15:sha256=0000000000000000000000000000000000000000000000000000000000000000 $ROOT
 ```
 
 - update dracut.conf to avoid unneeded modules, and to avoid dropping to root shell in case of boot errors
