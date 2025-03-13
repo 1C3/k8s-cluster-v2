@@ -46,6 +46,8 @@ wget "https://distfiles.gentoo.org/releases/amd64/autobuilds/current-stage3-amd6
 wget "https://distfiles.gentoo.org/releases/amd64/autobuilds/current-stage3-amd64-nomultilib-systemd/${current_stage3}.DIGESTS"
 if [[ $(sha512sum stage3*.tar.xz) = $(sed -n '/SHA512 HASH/{ n; /.*.tar.xz$/p }' stage3*.DIGESTS) ]]; then echo 'CHECKSUMS MATCH'; fi
 tar xpvf stage3*.tar.xz --xattrs-include='*.*' --numeric-owner
+
+git clone https://github.com/1C3/k8s-cluster-v2.git
 ```
 
 - chroot into the new system:
@@ -66,7 +68,6 @@ export PS1="(chroot) ${PS1}"
 
 - clone this repo, copy configuration files, emerge packages
 ```
-git clone https://github.com/1C3/k8s-cluster-v2.git
 cd k8s-cluster-v2
 cp -f etc/{make.conf,package.use} /etc/portage/
 chmod 644 /etc/portage/{make.conf,package.use}
