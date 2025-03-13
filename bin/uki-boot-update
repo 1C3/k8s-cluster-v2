@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for i in $(efibootmgr | grep -oP "^Boot[0-9]+" | cut -c 5-8)
+for i in $( efibootmgr | grep -oE '^Boot[0-9]+' | grep -oE '[0-9]+' )
     do efibootmgr -b $i -B -q
 done
 efibootmgr -O -q
@@ -9,8 +9,8 @@ UKI_PRIMARY=$( ls -t1 /efi/EFI/Linux/ | head -n1 )
 UKI_SECONDARY=$( ls -t1 /efi/EFI/Linux/ | head -n2 | tail -n1 )
 
 mkdir -p /efi/EFI/BOOT
-cp /efi/EFI/Linux/${UKI_PRIMARY} /efi/EFI/BOOT/BOOTX64.efi
+cp "/efi/EFI/Linux/${UKI_PRIMARY}" /efi/EFI/BOOT/BOOTX64.efi
 
-efibootmgr --create --disk /dev/nvme0n1 --label "Gentoo Primary EFI Stub UKI" --loader "\EFI\Linux\\${UKI_PRIMARY}" -q
-efibootmgr --create --disk /dev/nvme0n1 --label "Gentoo Secondary EFI Stub UKI" --loader "\EFI\Linux\\${UKI_SECONDARY}" -q
+efibootmgr --create --disk /dev/sda1 --label 'Gentoo Primary EFI Stub UKI' --loader "/EFI/Linux/${UKI_PRIMARY}" -q
+efibootmgr --create --disk /dev/sda1 --label 'Gentoo Secondary EFI Stub UKI' --loader "/EFI/Linux/${UKI_SECONDARY}" -q
 efibootmgr -o 0000,0001
