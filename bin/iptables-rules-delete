@@ -6,7 +6,7 @@ iptables -D INPUT -i lo                                      -j ACCEPT
 iptables -D INPUT -i hbox+                                   -j ACCEPT
 iptables -D INPUT -p tcp  --dport 22                         -j ACCEPT
 iptables -D INPUT -p icmp --icmp-type 8                      -j ACCEPT
-iptables -D INPUT --log-prefix "INPUT:DROP " --log-level 6   -j LOG
+iptables -D INPUT                                            -j LOG
 iptables -P INPUT ACCEPT
 
 ip6tables -Z INPUT
@@ -20,5 +20,5 @@ ip6tables -D INPUT -p ipv6-icmp --icmpv6-type router-advertisement              
 ip6tables -D INPUT -p ipv6-icmp --icmpv6-type neighbour-solicitation              -j ACCEPT
 ip6tables -D INPUT -p ipv6-icmp --icmpv6-type neighbour-advertisement             -j ACCEPT
 ip6tables -D INPUT -p ipv6-icmp --icmpv6-type redirect                            -j ACCEPT
-ip6tables -D INPUT --log-prefix "INPUT:DROP " --log-level 6                       -j LOG
+ip6tables -D INPUT                                                                -j LOG
 ip6tables -P INPUT ACCEPT
