@@ -71,11 +71,24 @@ export PS1="(chroot) ${PS1}"
 cd k8s-cluster-v2
 cp -f etc/{make.conf,package.use} /etc/portage/
 chmod 644 /etc/portage/{make.conf,package.use}
-cp -f etc/world /var/lib/portage/
-chmod 644 /var/lib/portage/world
 
 emerge-webrsync
 emerge -quDN @world
+emerge -q app-admin/eclean-kernel \
+app-crypt/sbctl \
+app-crypt/tpm2-tools \
+app-shells/bash-completion \
+dev-vcs/git \
+net-analyzer/traceroute \
+net-misc/telnet-bsd \
+net-vpn/wireguard-tools \
+net-wireless/iwd \
+sys-boot/efibootmgr \
+sys-firmware/intel-microcode \
+sys-kernel/gentoo-sources \
+sys-kernel/installkernel \
+sys-kernel/linux-firmware \
+sys-process/htop
 ```
 
 - set root password
