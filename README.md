@@ -75,7 +75,6 @@ cp -f etc/world /var/lib/portage/
 chmod 644 /var/lib/portage/world
 
 emerge-webrsync
-getuto
 emerge -quDN @world
 ```
 
