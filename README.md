@@ -224,7 +224,7 @@ systemcl enable --now iwd
 cp systemd/resolved.conf /etc/systemd/
 chmod 644 /etc/systemd/resolved.conf
 ln -sf ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
-systemcl enable --now systemd-resolved
+systemctl enable --now systemd-resolved
 ```
 
 - install cpu monitor and power limits config script
