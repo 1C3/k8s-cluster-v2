@@ -152,6 +152,19 @@ reboot
 
 - use recovery password to unlock root partition for the first boot, since the tpm doesn't hold the secret yet
 
+- configure ssh, get node local network ip
+```
+sed -i 's/#\?PermitRootLogin .\+/PermitRootLogin yes/' /etc/ssh/sshd_config
+systemctl enable --now sshd
+ip -4 r | grep default | grep -oE 'src [0-9.]+' | grep -oE '[0-9.]+'
+```
+
+- connect to the node via ssh
+  - `ssh-copy-id -i ~/.ssh/keyname root@<IP>` from a host that holds the private key, then install ssh key
+```
+sed -i 's/#\?PermitRootLogin .\+/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config
+```
+
 - configure systemd
 ```
 HOSTNAME=hbox1
