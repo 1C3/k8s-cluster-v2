@@ -133,7 +133,7 @@ sbctl status
 export KCFLAGS=' -march=gracemont'
 export KCPPFLAGS=' -march=gracemont'
 
-cp etc/kconfig /usr/src/linux/
+cp etc/kconfig /usr/src/linux/.config
 cd /usr/src/linux
 make olddefconfig
 make -j4
