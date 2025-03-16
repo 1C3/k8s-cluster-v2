@@ -226,10 +226,21 @@ ln -sf ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 systemcl enable --now systemd-resolved
 ```
 
-- setup sshd
-  - `ssh-copy-id -i ~/.ssh/keyname root@host` from a host that holds the private key
+- install cpu monitor and power limits config script
+
 ```
-echo 'PermitRootLogin prohibit-password' > /etc/ssh/sshd_config.d/
+cp bin/cpu-* /usr/local/bin/
+chmod 544 /usr/local/bin/cpu-*
+```
+
+- install cpu power limits configurations service
+
+```
+cp systemd/cpu-pl-config.* /etc/systemd/system/
+chmod 444 /etc/systemd/system/cpu-pl-config.*
+
+systemctl daemon-reload
+systemctl enable --now cpu-pl-config.service
 ```
 
 ## Part 2: VPN Connectivity

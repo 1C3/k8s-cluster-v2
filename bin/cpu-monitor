@@ -1,0 +1,49 @@
+#!/bin/sh
+
+energy_uj="/sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj"
+pl1_uw="/sys/class/powercap/intel-rapl/intel-rapl:0/constraint_0_power_limit_uw"
+pl2_uw="/sys/class/powercap/intel-rapl/intel-rapl:0/constraint_1_power_limit_uw"
+pkg_temp="/sys/class/hwmon/hwmon1/temp1_input"
+
+line_count=0
+
+print_line() {
+  printf "$1"
+  line_count=$(( line_count + 1 ))
+}
+
+erase_output() {
+  printf "\033[${line_count}A"
+  printf "\033[J"
+  line_count=0
+}
+
+printf "\n"
+
+while true; do
+
+  prev_energy_uj=$( cat "$energy_uj" )
+  sleep 1
+
+  curr_energy_uj=$( cat "$energy_uj" )
+  power=$( bc <<< "scale=3; ( $curr_energy_uj - $prev_energy_uj ) / 1000000" )
+  frequencies=$( cat /sys/devices/system/cpu/cpu{0,1,2,3}/cpufreq/scaling_cur_freq )
+  temperature=$(( $( cat "$pkg_temp" ) / 1000 ))
+  PL1=$( bc <<< "$( cat $pl1_uw ) / 1000000" )
+  PL2=$( bc <<< "$( cat $pl2_uw ) / 1000000" )
+
+  erase_output
+
+  print_line "Power Limits:  ${PL1} W / ${PL2} W\n"
+  print_line "Package Power: ${power} W\n"
+  print_line "Package Temp:  ${temperature} C\n"
+
+  core_number=0
+  for freq in $frequencies; do
+
+    current_freq_GHz=$( bc <<< "scale=2; $freq / 1000000" | sed 's/^\./0./' )
+    print_line "Core ${core_number} Freq:   ${current_freq_GHz} GHz\n"
+    let "core_number += 1"
+  done
+
+done
