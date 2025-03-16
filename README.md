@@ -37,7 +37,7 @@ mkdir -p /mnt/gentoo/efi
 mount $ESP /mnt/gentoo/efi
 ```
 
-- get stage3, check checksums match, extract
+- get stage3, check checksums match, extract, clone this repo into /
 ```
 current_stage3=$( curl -s https://distfiles.gentoo.org/releases/amd64/autobuilds/current-stage3-amd64-nomultilib-systemd/latest-stage3-amd64-nomultilib-systemd.txt | grep -oP '^stage3\S+' )
 cd /mnt/gentoo
@@ -66,10 +66,11 @@ source /etc/profile
 export PS1="(chroot) ${PS1}"
 ```
 
-- clone this repo, copy configuration files, emerge packages
+- movee into repo, copy configuration files, emerge packages
 ```
 cd k8s-cluster-v2
-cp -f etc/{make.conf,package.use} /etc/portage/
+rm -r /etc/portage/{make.conf,package.use}
+cp etc/{make.conf,package.use} /etc/portage/
 chmod 644 /etc/portage/{make.conf,package.use}
 
 emerge-webrsync
