@@ -227,20 +227,18 @@ systemcl enable --now systemd-resolved
 ```
 
 - install cpu monitor and power limits config script
-
 ```
 cp bin/cpu-* /usr/local/bin/
 chmod 544 /usr/local/bin/cpu-*
 ```
 
 - install cpu power limits configurations service
-
 ```
-cp systemd/cpu-pl-config.* /etc/systemd/system/
-chmod 444 /etc/systemd/system/cpu-pl-config.*
+cp systemd/cpu-pl-set.service /etc/systemd/system/
+chmod 444 /etc/systemd/system/cpu-pl-set.service
 
 systemctl daemon-reload
-systemctl enable --now cpu-pl-config.service
+systemctl enable --now cpu-pl-set.service
 ```
 
 ## Part 2: VPN Connectivity
@@ -248,7 +246,6 @@ systemctl enable --now cpu-pl-config.service
 ### dns update
 
 - write cloudflare dns api token in a secure location
-
 ```
 mkdir -p /etc/auth/
 echo $TOKEN > /etc/auth/cloudflare_api_token
@@ -256,14 +253,12 @@ chmod 400 /etc/auth/cloudflare_api_token
 ```
 
 - create dns updater script, and make it executable
-
 ```
 cp bin/dns-update /usr/local/bin/
 chmod 544 /usr/local/bin/dns-update
 ```
 
 - setup systemd timer running every minute
-
 ```
 cp systemd/dns-update.* /etc/systemd/system/
 chmod 444 /etc/systemd/system/dns-update.*
