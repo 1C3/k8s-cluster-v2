@@ -1,0 +1,14 @@
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/sh -c "               \n\
+echo 4G > /sys/block/zram0/disksize \n\
+mkswap /dev/zram0                    \n\
+swapon /dev/zram0                    \n\
+sysctl vm.swappiness=150             \n\
+sysctl vm.watermark_boost_factor=0   \n\
+sysctl vm.page-cluster=0             \n\
+"
+
+[Install]
+WantedBy=multi-user.target
