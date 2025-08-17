@@ -108,9 +108,12 @@ ROOT_ID=$( blkid | grep /dev/mapper/root | grep -oP '(?<= UUID=")[^"]+' )
 ESP_ID=$( blkid | grep $ESP | grep -oP '(?<= UUID=")[^"]+' )
 
 cat <<EOF > /etc/dracut.conf
-add_dracutmodules+=" systemd-cryptsetup tpm2-tss "
 kernel_cmdline="root=UUID=$ROOT_ID rd.luks.uuid=$LUKS_ID rd.luks.options=$LUKS_ID=tpm2-device=auto rd.luks.options=tpm2-measure-pcr=yes fsck.mode=force fsck.repair=yes"
+dracutmodules+=" systemd-initrd systemd-journald systemd-pcrphase systemd-cryptsetup tpm2-tss i18n shutdown "
+no_kernel="yes"
 early_microcode="yes"
+do_strip="yes"
+aggressive_strip="yes"
 compress="zstd"
 EOF
 
@@ -137,7 +140,6 @@ cp etc/kconfig /usr/src/linux/.config
 cd /usr/src/linux
 make olddefconfig
 make -j4
-make modules_install
 make install
 ```
 
@@ -186,9 +188,9 @@ systemd-cryptenroll --wipe-slot=tpm2 --tpm2-device=$TPM --tpm2-pcrs=7+15:sha256=
 ```
 sed '/kernel_cmdline/s/"$/ panic=0"/' /etc/dracut.conf > /etc/dracut.conf.tmp
 cp /etc/dracut.conf.tmp /etc/dracut.conf
-echo 'hostonly="yes"' >> /etc/dracut.conf
 cd /usr/src/linux
 make install
+uki-boot-update
 ```
 
 - remove stage3 and reboot
