@@ -179,7 +179,7 @@ systemctl enable --now systemd-timesyncd
 ```
 ROOT='/dev/sda2'
 TPM='/dev/tpmrm0' # systemd-cryptenroll --tpm2-device=list
-systemd-cryptenroll --wipe-slot=tpm2 --tpm2-device=$TPM --tpm2-pcrs=0+1+2+7+15:sha256=0000000000000000000000000000000000000000000000000000000000000000 $ROOT
+systemd-cryptenroll --wipe-slot=tpm2 --tpm2-device=$TPM --tpm2-pcrs=7+15:sha256=0000000000000000000000000000000000000000000000000000000000000000 $ROOT
 ```
 
 - update dracut.conf to avoid unneeded modules, and to avoid dropping to root shell in case of boot errors
