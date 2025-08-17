@@ -244,6 +244,15 @@ systemctl daemon-reload
 systemctl enable --now cpu-pl-set.service
 ```
 
+- install zram configuration service
+```
+cp systemd/zram-activate.service /etc/systemd/system/
+chmod 444 /etc/systemd/system/zram-activate.service
+
+systemctl daemon-reload
+systemctl enable --now zram-activate.service
+```
+
 ## Part 2: VPN Connectivity
 
 ### dns update
