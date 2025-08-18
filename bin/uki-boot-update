@@ -11,6 +11,7 @@ UKI_SECONDARY=$( ls -t1 /efi/EFI/Linux/ | head -n2 | tail -n1 )
 mkdir -p /efi/EFI/BOOT
 cp "/efi/EFI/Linux/${UKI_PRIMARY}" /efi/EFI/BOOT/BOOTX64.efi
 
+efibootmgr --create --disk /dev/sda1 --label 'UEFI OS' --loader '/EFI/BOOT/BOOTX64.efi' -q
 efibootmgr --create --disk /dev/sda1 --label 'Gentoo Primary EFI Stub UKI' --loader "/EFI/Linux/${UKI_PRIMARY}" -q
 efibootmgr --create --disk /dev/sda1 --label 'Gentoo Secondary EFI Stub UKI' --loader "/EFI/Linux/${UKI_SECONDARY}" -q
-efibootmgr -o 0000,0001
+efibootmgr -o 0000,0001,0002
