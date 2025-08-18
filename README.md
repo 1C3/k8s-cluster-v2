@@ -217,6 +217,11 @@ systemctl daemon-reload
 systemctl enable --now cpu-pl-set.service
 ```
 
+- set journald log retention to 1 week
+```
+sed -i 's/#\?MaxRetentionSec=.*$/MaxRetentionSec=7d/' /etc/systemd/journald.conf
+```
+
 - remove stage3 and reboot
 ```
 rm /stage3*
