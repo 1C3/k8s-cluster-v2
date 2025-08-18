@@ -311,3 +311,37 @@ sh wg-gen.sh
 ```
 
 - copy wireguard configs on each host in **/etc/wireguard**, then `systemctl enable wg-quick@<CONFIG NAME>`
+
+## Part 3: K8s preparations
+
+### package install
+
+- enable package forwarding:
+```
+cat <<"EOF" > /etc/sysctl.conf
+net.ipv4.ip_forward=1
+net.ipv6.conf.all.forwarding=1
+EOF
+
+sysctl -p
+```
+
+- emerge necessary packages, fix kubelet service file ([official documentation](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/#the-kubelet-drop-in-file-for-systemd)):
+```
+emerge -q containerd kubeadm kubectl kubelet
+
+cat <<"EOF" > /etc/systemd/system/kubelet.service
+[Service]
+Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"
+Environment="KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml"
+# This is a file that "kubeadm init" and "kubeadm join" generate at runtime, populating
+# the KUBELET_KUBEADM_ARGS variable dynamically
+EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env
+# This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably,
+# the user should use the .NodeRegistration.KubeletExtraArgs object in the configuration files instead.
+# KUBELET_EXTRA_ARGS should be sourced from this file.
+EnvironmentFile=-/etc/default/kubelet
+ExecStart=
+ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS
+EOF
+```
