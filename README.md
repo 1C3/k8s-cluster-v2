@@ -193,6 +193,30 @@ make install
 uki-boot-update
 ```
 
+- install zram configuration service
+```
+cp systemd/zram-activate.service /etc/systemd/system/
+chmod 444 /etc/systemd/system/zram-activate.service
+
+systemctl daemon-reload
+systemctl enable --now zram-activate.service
+```
+
+- install cpu monitor and power limits config script
+```
+cp bin/cpu-* /usr/local/bin/
+chmod 544 /usr/local/bin/cpu-*
+```
+
+- install cpu power limits configurations service
+```
+cp systemd/cpu-pl-set.service /etc/systemd/system/
+chmod 444 /etc/systemd/system/cpu-pl-set.service
+
+systemctl daemon-reload
+systemctl enable --now cpu-pl-set.service
+```
+
 - remove stage3 and reboot
 ```
 rm /stage3*
@@ -229,28 +253,9 @@ ln -sf ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 systemctl enable --now systemd-resolved
 ```
 
-- install cpu monitor and power limits config script
+- disable systemd-networkd-wait-online.service
 ```
-cp bin/cpu-* /usr/local/bin/
-chmod 544 /usr/local/bin/cpu-*
-```
-
-- install cpu power limits configurations service
-```
-cp systemd/cpu-pl-set.service /etc/systemd/system/
-chmod 444 /etc/systemd/system/cpu-pl-set.service
-
-systemctl daemon-reload
-systemctl enable --now cpu-pl-set.service
-```
-
-- install zram configuration service
-```
-cp systemd/zram-activate.service /etc/systemd/system/
-chmod 444 /etc/systemd/system/zram-activate.service
-
-systemctl daemon-reload
-systemctl enable --now zram-activate.service
+systemctl disable systemd-networkd-wait-online.service
 ```
 
 ## Part 2: VPN Connectivity
