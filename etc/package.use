@@ -1,5 +1,5 @@
-sys-apps/systemd cryptsetup boot tpm
+sys-apps/systemd boot cryptsetup policykit tpm
 sys-kernel/installkernel dracut uki
 net-firewall/iptables conntrack nftables
 net-wireless/iwd standalone
-sys-firmware/intel-microcode hostonly
+sys-firmware/intel-microcode hostonly -initramfs
