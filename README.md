@@ -332,7 +332,7 @@ emerge -q containerd kubeadm kubectl kubelet
 
 cat <<"EOF" > /etc/systemd/system/kubelet.service
 [Service]
-Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"
+Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --config-dir=/etc/kubernetes/kubelet.conf.d"
 Environment="KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml"
 # This is a file that "kubeadm init" and "kubeadm join" generate at runtime, populating
 # the KUBELET_KUBEADM_ARGS variable dynamically
@@ -343,5 +343,16 @@ EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env
 EnvironmentFile=-/etc/default/kubelet
 ExecStart=
 ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS
+EOF
+```
+
+- allow kubelet to use swap:
+```
+mkdir -p /etc/kubernetes/kubelet.conf.d
+
+cat <<"EOF" > /etc/kubernetes/kubelet.conf.d/allow-swap.conf
+failSwapOn: false
+memorySwap:
+    swapBehavior: LimitedSwap
 EOF
 ```
