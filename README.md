@@ -328,7 +328,7 @@ sysctl -p
 
 - emerge necessary packages, fix kubelet service file ([official documentation](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/#the-kubelet-drop-in-file-for-systemd)):
 ```
-emerge -q containerd kubeadm kubectl kubelet
+emerge -q containerd kubeadm kubectl kubelet cni-plugins
 
 cat <<"EOF" > /etc/systemd/system/kubelet.service
 [Service]
