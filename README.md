@@ -293,15 +293,14 @@ systemctl enable --now dns-update.timer
 
 - set iptables rules using a systemd service:
 ```
-cp bin/iptables-rules-* /usr/local/bin/
-chmod 544 /usr/local/bin/iptables-rules-*
+cp bin/input-rules.nft /usr/local/bin/
+chmod 544 /usr/local/bin/input-rules.nft
 
-cp systemd/iptables-rules.service /etc/systemd/system/
-chmod 444 /etc/systemd/system/iptables-rules.service
+cp systemd/nftables-rules.service /etc/systemd/system/
+chmod 444 /etc/systemd/system/nftables-rules.service
 
-eselect iptables set xtables-nft-multi
 systemctl daemon-reload
-systemctl enable --now iptables-rules.service
+systemctl enable --now nftables-rules.service
 ```
 
 - generate wireguard configs:
