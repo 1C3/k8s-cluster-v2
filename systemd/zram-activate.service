@@ -2,7 +2,7 @@
 Type=oneshot
 RemainAfterExit=yes
 ExecStart=/bin/sh -c "               \n\
-echo 4G > /sys/block/zram0/disksize \n\
+echo 4G > /sys/block/zram0/disksize  \n\
 mkswap /dev/zram0                    \n\
 swapon /dev/zram0                    \n\
 sysctl vm.swappiness=150             \n\
