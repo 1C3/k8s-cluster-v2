@@ -331,7 +331,7 @@ emerge -q containerd kubeadm kubectl kubelet cni-plugins
 
 cat <<"EOF" > /etc/systemd/system/kubelet.service
 [Service]
-Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --config-dir=/etc/kubernetes/kubelet.conf.d"
+Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"
 Environment="KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml"
 # This is a file that "kubeadm init" and "kubeadm join" generate at runtime, populating
 # the KUBELET_KUBEADM_ARGS variable dynamically
