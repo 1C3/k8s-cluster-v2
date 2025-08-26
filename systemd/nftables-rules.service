@@ -1,0 +1,11 @@
+[Unit]
+Before=network-pre.target
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/input-rules.nft
+
+[Install]
+WantedBy=multi-user.target
