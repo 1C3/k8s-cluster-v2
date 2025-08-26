@@ -10,3 +10,6 @@ RouteMetric=1024
 
 [IPv6AcceptRA]
 RouteMetric=1024
+
+[Link]
+RequiredForOnline=no
