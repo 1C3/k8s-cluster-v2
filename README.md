@@ -89,7 +89,8 @@ sys-firmware/intel-microcode \
 sys-kernel/gentoo-sources \
 sys-kernel/installkernel \
 sys-kernel/linux-firmware \
-sys-process/htop
+sys-process/htop \
+net-firewall/nftables
 ```
 
 - set root password
