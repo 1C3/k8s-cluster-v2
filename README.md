@@ -318,7 +318,9 @@ sh wg-gen.sh
 
 - enable package forwarding:
 ```
-cat <<"EOF" > /etc/sysctl.conf
+mkdir -p /etc/sysctl.d
+
+cat <<"EOF" > /etc/sysctl.d/00-forwarding.conf
 net.ipv4.ip_forward=1
 net.ipv6.conf.all.forwarding=1
 EOF
