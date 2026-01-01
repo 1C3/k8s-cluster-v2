@@ -11,5 +11,8 @@ RouteMetric=512
 [IPv6AcceptRA]
 RouteMetric=512
 
+[DHCPv6]
+RouteMetric=512
+
 [Link]
 RequiredForOnline=no
