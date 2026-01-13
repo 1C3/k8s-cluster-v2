@@ -90,7 +90,8 @@ sys-kernel/gentoo-sources \
 sys-kernel/installkernel \
 sys-kernel/linux-firmware \
 sys-process/htop \
-net-firewall/nftables
+net-firewall/nftables \
+net-misc/chrony
 ```
 
 - set root password
@@ -175,7 +176,13 @@ HOSTNAME=hbox1
 systemd-machine-id-setup
 hostnamectl set-hostname $HOSTNAME
 ln -sf ../usr/share/zoneinfo/Europe/Rome /etc/localtime
-systemctl enable --now systemd-timesyncd
+```
+
+- enable chrony
+```
+cp etc/chrony.conf /etc/chrony/
+chmod 644 /etc/chrony/chrony.conf
+systemctl enable --now chronyd
 ```
 
 - setup tpm2 key for auto unlocking of root partition:
