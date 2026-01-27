@@ -91,7 +91,8 @@ sys-kernel/installkernel \
 sys-kernel/linux-firmware \
 sys-process/htop \
 net-firewall/nftables \
-net-misc/chrony
+net-misc/chrony \
+net-proxy/haproxy
 ```
 
 - set root password

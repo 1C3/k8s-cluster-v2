@@ -3,3 +3,4 @@ sys-kernel/installkernel dracut uki
 net-firewall/iptables conntrack nftables
 net-wireless/iwd standalone
 sys-firmware/intel-microcode hostonly -initramfs
+net-proxy/haproxy -crypt -net_ns -pcre -slz -ssl -zlib
