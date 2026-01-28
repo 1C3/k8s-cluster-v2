@@ -336,6 +336,14 @@ EOF
 sysctl -p
 ```
 
+- setup haproxy to act as kube-apiserver lb
+```
+cp etc/haproxy.cfg /etc/haproxy/
+chmod 644 /etc/haproxy/haproxy.cfg
+
+systemctl enable --now haproxy.service
+```
+
 - emerge necessary packages, fix kubelet service file ([official documentation](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/#the-kubelet-drop-in-file-for-systemd)):
 ```
 emerge -q containerd kubeadm kubectl kubelet cni-plugins
