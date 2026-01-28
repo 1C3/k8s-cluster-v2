@@ -1,18 +1,47 @@
+---
 apiVersion: kubeadm.k8s.io/v1beta4
 kind: InitConfiguration
-localAPIEndpoint:
-  advertiseAddress: ###wg_address###
-  bindPort: 6443
 nodeRegistration:
   kubeletExtraArgs:
   - name: node-ip
     value: ###wg_address###
   name: ###hostname###
+  taints: []
+localAPIEndpoint:
+  advertiseAddress: ###wg_address###
+  bindPort: 6443
+bootstrapTokens:
+  - token: ###token###
+    ttl: "1h"
+certificateKey: ###cert_key###
+---
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: JoinConfiguration
+nodeRegistration:
+  kubeletExtraArgs:
+  - name: node-ip
+    value: ###wg_address###
+  name: hbox2
+  taints: []
+controlPlane:
+  localAPIEndpoint:
+    advertiseAddress: ###wg_address###
+    bindPort: 6443
+  certificateKey: ###cert_key###
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: "localhost:6444"
+    token: ###token###
+    unsafeSkipCAVerification: true
 ---
 apiVersion: kubeadm.k8s.io/v1beta4
 kind: ClusterConfiguration
+controlPlaneEndpoint: "localhost:6444"
 networking:
+  serviceSubnet: "10.96.0.0/16"
   podSubnet: "10.244.0.0/16"
+caCertificateValidityPeriod: 876600h0m0s
+certificateValidityPeriod: 876600h0m0s
 ---
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
 kind: KubeProxyConfiguration
