@@ -7,14 +7,21 @@ table inet input-rules {
     ct state { established, related } accept
     iifname "lo" accept
     iifname "wg0" accept
-    iifname "cni0" accept
+    iifname "cali*" accept
     tcp dport 22 accept
+    meta nfproto ipv6 udp dport 51820 accept
 
     meta nfproto ipv4 icmp type echo-request accept
-
-    meta nfproto ipv6 udp dport 51820 accept
-    meta nfproto ipv6 ip6 saddr fe80::/10 ip6 daddr fe80::/10 udp sport 547 udp dport 546 accept
+    meta nfproto ipv4 icmp type destination-unreachable accept
+    meta nfproto ipv4 icmp type time-exceeded accept
+    meta nfproto ipv4 icmp type parameter-problem accept
+  
     meta nfproto ipv6 icmpv6 type echo-request accept
+    meta nfproto ipv6 icmpv6 type packet-too-big accept
+    meta nfproto ipv6 icmpv6 type time-exceeded accept
+    meta nfproto ipv6 icmpv6 type parameter-problem accept
+
+    meta nfproto ipv6 ip6 saddr fe80::/10 ip6 daddr fe80::/10 udp sport 547 udp dport 546 accept
     meta nfproto ipv6 icmpv6 type nd-router-advert accept
     meta nfproto ipv6 icmpv6 type nd-neighbor-solicit accept
     meta nfproto ipv6 icmpv6 type nd-neighbor-advert accept
