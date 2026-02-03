@@ -1,0 +1,15 @@
+apiVersion: operator.tigera.io/v1
+kind: Installation
+metadata:
+  name: default
+spec:
+  calicoNetwork:
+    linuxDataplane: Nftables
+    bgp: Enabled
+    mtu: 1412
+    ipPools:
+    - blockSize: 24
+      cidr: 10.244.0.0/16
+      encapsulation: None
+      natOutgoing: Enabled
+      nodeSelector: all()

@@ -25,6 +25,7 @@ cat $tmp_file | while read host; do
     echo "[Interface]" >> $outfile
     echo "PrivateKey = $privkey" >> $outfile
     echo "Address = $ip/24" >> $outfile
+    echo "MTU = 1412" >> $outfile
     echo "ListenPort = 51820" >> $outfile
 
     cat $tmp_file | while read peer_host; do
