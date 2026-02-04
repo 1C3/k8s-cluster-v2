@@ -1,0 +1,5 @@
+=sys-cluster/kubeadm-1.35.0
+=sys-cluster/kubelet-1.35.0
+=sys-cluster/kubectl-1.35.0
+
+app-crypt/acme-sh ~amd64

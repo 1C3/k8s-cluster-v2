@@ -69,9 +69,9 @@ export PS1="(chroot) ${PS1}"
 - movee into repo, copy configuration files, emerge packages
 ```
 cd k8s-cluster-v2
-rm -r /etc/portage/{make.conf,package.use}
-cp etc/{make.conf,package.use} /etc/portage/
-chmod 644 /etc/portage/{make.conf,package.use}
+rm -r /etc/portage/{make.conf,package.use,package.accept_keywords}
+cp etc/{make.conf,package.use,package.accept_keywords} /etc/portage/
+chmod 644 /etc/portage/{make.conf,package.use,package.accept_keywords}
 
 emerge-webrsync
 emerge -quDN @world
@@ -92,7 +92,8 @@ sys-kernel/linux-firmware \
 sys-process/htop \
 net-firewall/nftables \
 net-misc/chrony \
-net-proxy/haproxy
+net-proxy/haproxy \
+app-crypt/acme-sh
 ```
 
 - set root password
