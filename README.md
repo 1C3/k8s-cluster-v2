@@ -321,6 +321,35 @@ sh wg-gen.sh
 
 - copy wireguard configs on each host in **/etc/wireguard**, then `systemctl enable wg-quick@<CONFIG NAME>`
 
+### automatic ssl certificates
+
+- obtain a certificate and store it in /etc/ssl/private/
+```
+export INFOMANIAK_API_TOKEN=$( cat /etc/auth/infomaniak_api_token )
+export ACME_DOMAIN='atmtc.eu'
+
+acme.sh --config-home /etc/acme-sh \
+        --server letsencrypt \
+        --issue \
+        --dns dns_infomaniak \
+        -d "$ACME_DOMAIN" -d "*.$ACME_DOMAIN"
+
+acme.sh --config-home /etc/acme-sh \
+        -d "$ACME_DOMAIN" -d "*.$ACME_DOMAIN" \
+        --install-cert \
+        --key-file "/etc/ssl/private/${ACME_DOMAIN}.key" \
+        --fullchain-file "/etc/ssl/private/${ACME_DOMAIN}.pem"
+```
+
+- setup renewal check timer running every hour
+```
+cp systemd/acme-sh.* /etc/systemd/system/
+chmod 444 /etc/systemd/system/acme-sh.*
+
+systemctl daemon-reload
+systemctl enable --now acme-sh.timer
+```
+
 ## Part 3: K8s preparations
 
 ### package install

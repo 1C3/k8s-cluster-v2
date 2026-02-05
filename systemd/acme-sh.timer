@@ -1,0 +1,7 @@
+[Timer]
+OnCalendar=*-*-* *:00:00
+RandomizedDelaySec=3600
+Unit=acme-sh.service
+
+[Install]
+WantedBy=timers.target

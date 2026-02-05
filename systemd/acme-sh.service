@@ -1,0 +1,6 @@
+[Service]
+Type=simple
+ExecStart=/bin/sh -c "INFOMANIAK_API_TOKEN=$( cat /etc/auth/infomaniak_api_token ) /bin/acme.sh --cron --config-home /etc/acme-sh"
+
+[Install]
+WantedBy=multi-user.target
