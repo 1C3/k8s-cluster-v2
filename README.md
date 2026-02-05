@@ -277,11 +277,11 @@ systemctl disable systemd-networkd-wait-online.service
 
 ### dns update
 
-- write cloudflare dns api token in a secure location
+- write infomaniak dns api token in a secure location
 ```
 mkdir -p /etc/auth/
-echo $TOKEN > /etc/auth/cloudflare_api_token
-chmod 400 /etc/auth/cloudflare_api_token
+echo $TOKEN > /etc/auth/infomaniak_api_token
+chmod 400 /etc/auth/infomaniak_api_token
 ```
 
 - create dns updater script, and make it executable

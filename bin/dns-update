@@ -1,60 +1,52 @@
 #!/bin/sh
 
-NAME="$( cat /etc/hostname )"
-ZONE='ic3.systems'
-TOKEN='/etc/auth/cloudflare_api_token'
+NAME="$( cat /etc/hostname | cut -d '.' -f 1 )"
+ZONE='atmtc.eu'
+TOKEN="$( cat /etc/auth/infomaniak_api_token )"
 
 device=$( ip -6 route show default | grep -oP '(?<=dev )[a-zA-Z0-9]+' | head -n 1 )
 target_ip=$( ip -6 addr show "$device" | grep -oP '(?<=inet6 )[a-f0-9:]+(?=\/[0-9]+ scope global)' | sort | head -n 1 )
 
-auth_bearer="$( cat "$TOKEN" )"
-dns_name="$NAME.$ZONE"
+zone_data=$( curl -sS -G \
+ -H "Authorization: Bearer $TOKEN" \
+ -H "Content-Type: application/json" \
+ "https://api.infomaniak.com/2/zones/${ZONE}/records"
+)
 
-zone_id_response=$( \
-curl -X GET "https://api.cloudflare.com/client/v4/zones?name=$ZONE" \
-     -H     "Authorization: Bearer $auth_bearer" \
-     -H     "Content-Type: application/json" \
-     -s )
+if echo "$zone_data" | jq -e '.data[] | select(.source == "'$NAME'" and .type == "AAAA")' > /dev/null; then
 
-zone_id=$( echo "$zone_id_response" | grep -oP "(?<=\"id\":\")[a-z0-9]+" | head -n 1 )
+  record_data=$( echo "$zone_data" | jq '.data[] | select(.source == "'$NAME'") | select(.type == "AAAA")' )
+  current_ip=$( echo "$record_data" | jq -r '.target' )
+  record_id=$( echo "$record_data" | jq -r '.id' )
 
-dns_record_response=$( \
-curl -X GET "https://api.cloudflare.com/client/v4/zones/$zone_id/dns_records?name=$dns_name&type=AAAA" \
-     -H     "Authorization: Bearer $auth_bearer" \
-     -H     "Content-Type: application/json" \
-     -s )
+  if [ "$current_ip" = "$target_ip" ]; then
 
-dns_record_id=$( echo "$dns_record_response" | grep -oP "(?<=\"id\":\")[a-z0-9]+" )
-current_ip=$( echo "$dns_record_response" | grep -oP "(?<=\"content\":\")[a-f0-9:]+" )
+    echo "DNS RECORD ${NAME}.${ZONE} found with IP: $current_ip, update not needed"
+  else
+        
+    echo "DNS RECORD ${NAME}.${ZONE} found with IP: $current_ip, updating to IP: $target_ip"
 
-if [ "$current_ip" = "$target_ip" ]; then
-  exit 0
-fi
-
-if [ -n "$dns_record_id" ]; then
-  echo "DNS RECORD $dns_name found with IP: $current_ip, updating to IP: $target_ip"
-  curl -X PUT "https://api.cloudflare.com/client/v4/zones/$zone_id/dns_records/$dns_record_id" \
-       -H "Authorization: Bearer $auth_bearer" \
-       -H "Content-Type: application/json" \
-       --data '{
-          "type": "AAAA",
-          "name": "'"$dns_name"'",
-          "content": "'"$target_ip"'",
-          "ttl": 1,
-          "proxied": false
-          }' \
-       -s -S -o /dev/null
+    curl -sS -X PUT \
+     -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" \
+     -d '{
+      "target": "'$target_ip'",
+      "ttl": "60"
+     }' \
+     "https://api.infomaniak.com/2/zones/${ZONE}/records/${record_id}" | jq
+  fi
 else
-  echo "DNS RECORD $dns_name not found, creating with IP: $target_ip"
-  curl -X POST "https://api.cloudflare.com/client/v4/zones/$zone_id/dns_records" \
-       -H "Authorization: Bearer $auth_bearer" \
-       -H "Content-Type: application/json" \
-       --data '{
-          "type": "AAAA",
-          "name": "'"$dns_name"'",
-          "content": "'"$target_ip"'",
-          "ttl": 1,
-          "proxied": false
-          }' \
-       -s -S -o /dev/null
+
+  echo "DNS RECORD ${NAME}.${ZONE} not found, creating with IP: $target_ip"
+
+  curl -sS -X POST \
+   -H "Authorization: Bearer $TOKEN" \
+   -H "Content-Type: application/json" \
+   -d '{
+    "source": "'$NAME'",
+    "target": "'$target_ip'",
+    "ttl": "60",
+    "type": "AAAA"
+   }' \
+  "https://api.infomaniak.com/2/zones/${ZONE}/records" | jq
 fi
