@@ -385,6 +385,16 @@ systemctl daemon-reload
 systemctl enable --now containerd.service kubelet.service
 ```
 
+- add some utility to .bash_profile
+```
+echo "
+export KUBECONFIG=/etc/kubernetes/admin.conf
+alias ip='ip -c'
+" >> /root/.bash_profile
+
+source /root/.bash_profile
+```
+
 ## Part 3: K8s installation
 
 ### cluster bringup
