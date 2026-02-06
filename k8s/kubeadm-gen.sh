@@ -1,4 +1,12 @@
----
+#!/bin/sh
+
+nodes='
+hbox1.atmtc.eu 10.90.0.1
+hbox2.atmtc.eu 10.90.0.2
+hbox3.atmtc.eu 10.90.0.3
+'
+
+template='---
 apiVersion: kubeadm.k8s.io/v1beta4
 kind: InitConfiguration
 nodeRegistration:
@@ -21,7 +29,7 @@ nodeRegistration:
   kubeletExtraArgs:
   - name: node-ip
     value: ###wg_address###
-  name: hbox2
+  name: ###hostname### 
   taints: []
 controlPlane:
   localAPIEndpoint:
@@ -52,3 +60,21 @@ kind: KubeletConfiguration
 failSwapOn: false
 memorySwap:
     swapBehavior: LimitedSwap
+'
+
+token=$( kubeadm token generate )
+cert_key=$( kubeadm certs certificate-key )
+
+printf "%s" "$nodes" | tail -n +2 | while IFS='' read line; do
+
+    hostname=$( echo "$line" | cut -d ' ' -f 1 )
+    wg_address=$( echo "$line" | cut -d ' ' -f 2 )
+
+    printf "%s" "$template" | \
+    sed "s/###hostname###/$hostname/g" | \
+    sed "s/###wg_address###/$wg_address/g" | \
+    sed "s/###token###/$token/g" | \
+    sed "s/###cert_key###/$cert_key/g" \
+    > "kubeadm-${hostname}-config.yaml"
+
+done

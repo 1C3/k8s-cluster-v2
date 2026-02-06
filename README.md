@@ -174,7 +174,7 @@ sed -i 's/#\?PermitRootLogin .\+/PermitRootLogin prohibit-password/' /etc/ssh/ss
 
 - configure systemd
 ```
-HOSTNAME=hbox1
+HOSTNAME=<HOSTNAME>
 systemd-machine-id-setup
 hostnamectl set-hostname $HOSTNAME
 ln -sf ../usr/share/zoneinfo/Europe/Rome /etc/localtime
@@ -384,3 +384,19 @@ chmod 444 /etc/systemd/system/kubelet.service
 systemctl daemon-reload
 systemctl enable --now containerd.service kubelet.service
 ```
+
+## Part 3: K8s installation
+
+### cluster bringup
+
+- generate kubeadm configs:
+```
+cd k8s
+sh kubeadm-gen.sh
+```
+
+- copy kubeadm configs on each host
+
+- run `kubeadm init --upload-certs --config "kubeadm-$( hostnamectl hostname )-config.yaml"` on the first node
+
+- join the other nodes by running `kubeadm join --config "kubeadm-$( hostnamectl hostname )-config.yaml"`
